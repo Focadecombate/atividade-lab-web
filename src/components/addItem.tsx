@@ -11,18 +11,6 @@ interface Props {
 }
 
 export const AddItem = ({ error, name, onTextChange, finallyAt, onDateChange, onAdd }: Props) => {
-  // const [selectedDate, setSelectedDate] = useState('');
-
-  // const handleDateChange = (event) => {
-  //   setSelectedDate(event.target.value);
-  // };
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   // Aqui você pode fazer algo com a data selecionada, como enviar para o servidor ou atualizar o estado global da aplicação.
-  //   console.log('Data selecionada:', selectedDate);
-  // };
-
   const hasError = error.length > 0;
 
   const inputRef = useRef<HTMLInputElement>(null);
