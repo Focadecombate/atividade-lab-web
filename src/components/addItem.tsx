@@ -4,11 +4,13 @@ import { TextField, Button } from "@mui/material";
 interface Props {
   error: string;
   name: string;
+  finallyAt: Date;
   onAdd: () => void;
   onTextChange: (name: string) => void;
+  onDateChange: (finallyAt: Date) => void;
 }
 
-export const AddItem = ({ error, name, onTextChange, onAdd }: Props) => {
+export const AddItem = ({ error, name, onTextChange, finallyAt, onDateChange, onAdd }: Props) => {
   const hasError = error.length > 0;
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -30,6 +32,16 @@ export const AddItem = ({ error, name, onTextChange, onAdd }: Props) => {
         helperText={error}
         ref={inputRef}
         fullWidth
+      />
+      <TextField
+        id="date"
+        label="Data limite"
+        type="date"
+        style={{
+          marginLeft: 10
+        }}
+        value={finallyAt}
+        onChange={({ target }) => onDateChange(new Date(target.value))}
       />
       <Button
         variant="contained"

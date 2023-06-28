@@ -24,6 +24,10 @@ export function Home({ appState, dispatch }: Props) {
     dispatch({ type: TarefaActionsEnum.write, payload: { name } });
   };
 
+  const onDateChange = (finallyAt: Date) => {
+    dispatch({ type: TarefaActionsEnum.writeDate, payload: { finallyAt } });
+  };
+
   const onAdd = () => {
     dispatch({ type: TarefaActionsEnum.add, payload: {} });
   };
@@ -56,7 +60,9 @@ export function Home({ appState, dispatch }: Props) {
         <AddItem
           error={appState.error}
           name={appState.name}
+          finallyAt={appState.finallyAt}
           onTextChange={onTextChange}
+          onDateChange={onDateChange}
           onAdd={onAdd}
         />
         <ListaTarefas
