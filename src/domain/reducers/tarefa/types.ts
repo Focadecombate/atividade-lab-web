@@ -9,6 +9,7 @@ export const TarefaActionsEnum = {
   remove: "REMOVE",
   toggle: "TOGGLE",
   write: "WRITE",
+  writeDate: "WRITE_DATE",
   search: "SEARCH",
 } as const;
 
@@ -24,6 +25,7 @@ export interface TarefasState {
   error: string;
   name: string;
   search: string;
+  finallyAt: Date;
 }
 
 export interface Toggle {
@@ -52,6 +54,13 @@ export interface Write {
   };
 }
 
+export interface WriteDate {
+  type: TarefaActionsType["writeDate"];
+  payload: {
+    finallyAt: Date;
+  };
+}
+
 export interface Search {
   type: TarefaActionsType["search"];
   payload: {
@@ -59,7 +68,7 @@ export interface Search {
   };
 }
 
-export type AllActions = Add | Remove | Toggle | Write | Search;
+export type AllActions = Add | Remove | Toggle | Write | WriteDate | Search;
 
 export type Actor<T extends AllActions> = (
   state: TarefasState,

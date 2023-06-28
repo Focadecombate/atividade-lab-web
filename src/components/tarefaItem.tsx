@@ -16,6 +16,12 @@ export const TarefaItem = ({
 }: Props) => {
   const opacity = tarefa.done ? 0.5 : 1;
 
+  const isTaskExpired = (tarefa: Tarefa) => {
+    const currentDate = new Date();
+    const taskDate = new Date(tarefa.finallyAt);
+    return taskDate < currentDate;
+  };
+
   return (
     <Paper
       style={{
@@ -26,6 +32,7 @@ export const TarefaItem = ({
         justifyContent: "space-between",
         alignItems: "center",
         opacity,
+        color: isTaskExpired(tarefa) ? 'red' : 'black',
       }}
       elevation={1}
     >

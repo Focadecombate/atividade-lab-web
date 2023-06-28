@@ -7,6 +7,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { MyAppBar } from "../components/appBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { TarefaNotFound } from "../components/tarefaNotFound";
+import { Tarefa } from "../domain/model/tarefa";
 
 interface Props {
   appState: TarefasState;
@@ -23,6 +24,12 @@ export const TarefaPage = ({ appState }: Props) => {
   if (!tarefa) {
     return <TarefaNotFound navigate={navigate} />;
   }
+
+  const isTaskExpired = (tarefa: Tarefa) => {
+    const currentDate = new Date();
+    const taskDate = new Date(tarefa.finallyAt);
+    return taskDate < currentDate;
+  };
 
   return (
     <>
@@ -54,7 +61,14 @@ export const TarefaPage = ({ appState }: Props) => {
           flex: 1,
         }}
       >
-        <Typography variant="h1">{tarefa.name}</Typography>
+        <Typography 
+          variant="h1"
+          style={{
+            color: isTaskExpired(tarefa) ? 'red' : 'black',
+          }}
+        >
+          {tarefa.name}
+        </Typography>
         <div
           style={{
             display: "flex",
@@ -79,13 +93,19 @@ export const TarefaPage = ({ appState }: Props) => {
             </Typography>
             <Typography variant="body1">
               Data de Criação:
-              {format(tarefa.createdAt, " eeee, dd/MM/yyyy HH:mm", {
+              {format(new Date(tarefa.createdAt), " eeee, dd/MM/yyyy HH:mm", {
                 locale: ptBR,
               })}
             </Typography>
             <Typography variant="body1">
-              {formatDistance(tarefa.createdAt, new Date(), {
+              {formatDistance(new Date(tarefa.createdAt), new Date(), {
                 addSuffix: true,
+                locale: ptBR,
+              })}
+            </Typography>
+            <Typography variant="body1">
+              Data Limite:
+              {format(new Date(tarefa.finallyAt), " eeee, dd/MM/yyyy HH:mm", {
                 locale: ptBR,
               })}
             </Typography>

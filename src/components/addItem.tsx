@@ -4,11 +4,25 @@ import { TextField, Button } from "@mui/material";
 interface Props {
   error: string;
   name: string;
+  finallyAt: Date;
   onAdd: () => void;
   onTextChange: (name: string) => void;
+  onDateChange: (finallyAt: Date) => void;
 }
 
-export const AddItem = ({ error, name, onTextChange, onAdd }: Props) => {
+export const AddItem = ({ error, name, onTextChange, finallyAt, onDateChange, onAdd }: Props) => {
+  // const [selectedDate, setSelectedDate] = useState('');
+
+  // const handleDateChange = (event) => {
+  //   setSelectedDate(event.target.value);
+  // };
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   // Aqui você pode fazer algo com a data selecionada, como enviar para o servidor ou atualizar o estado global da aplicação.
+  //   console.log('Data selecionada:', selectedDate);
+  // };
+
   const hasError = error.length > 0;
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -30,6 +44,16 @@ export const AddItem = ({ error, name, onTextChange, onAdd }: Props) => {
         helperText={error}
         ref={inputRef}
         fullWidth
+      />
+      <TextField
+        id="date"
+        label="Data limite"
+        type="date"
+        style={{
+          marginLeft: 10
+        }}
+        value={finallyAt}
+        onChange={({ target }) => onDateChange(new Date(target.value))}
       />
       <Button
         variant="contained"

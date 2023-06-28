@@ -1,11 +1,18 @@
-import { Actor, AllActions, Remove, Search, Toggle, Write, Add, TarefaActionsEnum, TarefasState } from "./types";
+import { Actor, AllActions, Remove, Search, Toggle, Write, Add, TarefaActionsEnum, TarefasState, WriteDate } from "./types";
 
-export const makeInitialTarefaState = (): TarefasState => ({
-  tarefas: [],
-  error: "",
-  name: "",
-  search: "",
-});
+export const makeInitialTarefaState = (): TarefasState => {
+  let tarefasSalvas = localStorage.getItem('tasks');
+  if (!tarefasSalvas) {
+    tarefasSalvas = "[]";
+  }
+  return {
+    tarefas: JSON.parse(tarefasSalvas),
+    error: "",
+    name: "",
+    search: "",
+    finallyAt: new Date(),
+  }
+};
 
 export const removeTask: Actor<Remove> = (state, action) => {
   return {
@@ -42,8 +49,16 @@ export const writeTask: Actor<Write> = (state, { payload }) => {
   };
 };
 
+export const writeDate: Actor<WriteDate> = (state, { payload }) => {
+  return {
+    ...state,
+    error: "",
+    finallyAt: payload.finallyAt,
+  };
+};
+
 export const addTask: Actor<Add> = (state) => {
-  if (state.name === "") {
+  if (state.name === "" || !state.finallyAt) {
     return {
       ...state,
       error: "Nome da tarefa não pode ser vazio",
@@ -54,16 +69,24 @@ export const addTask: Actor<Add> = (state) => {
     return state;
   }
 
+  const tarefa = {
+    id: (state.tarefas.length + 1).toString(),
+    name: state.name,
+    done: false,
+    createdAt: new Date(),
+    finallyAt: state.finallyAt,
+  };
+
+  localStorage.setItem('tasks', JSON.stringify([
+    ...state.tarefas,
+    tarefa,
+  ], null, 2));
+
   return {
     ...state,
     tarefas: [
       ...state.tarefas,
-      {
-        id: (state.tarefas.length + 1).toString(),
-        name: state.name,
-        done: false,
-        createdAt: new Date(),
-      },
+      tarefa,
     ],
     error: "",
     name: "",
@@ -93,6 +116,9 @@ export const tarefaReducer = (
 
     case TarefaActionsEnum.write:
       return writeTask(state, action);
+
+    case TarefaActionsEnum.writeDate:
+      return writeDate(state, action);
 
     case TarefaActionsEnum.search:
       return searchTask(state, action);
